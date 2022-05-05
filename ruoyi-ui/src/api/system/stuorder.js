@@ -10,9 +10,9 @@ export function listStuorder(query) {
 }
 
 // 查询解疑辅导室预约信息详细
-export function getStuorder(timeId) {
+export function getStuorder(studentOrderId) {
   return request({
-    url: '/system/stuorder/' + timeId,
+    url: '/system/stuorder/' + studentOrderId,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateStuorder(data) {
 }
 
 // 删除解疑辅导室预约信息
-export function delStuorder(timeId) {
+export function delStuorder(studentOrderId) {
   return request({
-    url: '/system/stuorder/' + timeId,
+    url: '/system/stuorder/' + studentOrderId,
     method: 'delete'
   })
 }

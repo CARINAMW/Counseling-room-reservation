@@ -1,20 +1,12 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="节数" prop="timeId">
-        <el-input
-          v-model="queryParams.timeId"
-          placeholder="请输入节数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="日期" prop="orderDate">
         <el-date-picker clearable
-                        v-model="queryParams.orderDate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择日期">
+          v-model="queryParams.orderDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="科目" prop="subjectName">
@@ -33,10 +25,36 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+<!--      <el-form-item label="课程" prop="course">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.course"-->
+<!--          placeholder="请输入课程"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="学生人数" prop="studentNum">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.studentNum"-->
+<!--          placeholder="请输入学生人数"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="辅导室编号" prop="roomId">
+        <el-select v-model="queryParams.roomId" placeholder="请选择辅导室编号" filterable clearable>
+          <el-option
+            v-for="dict in dict.type.croom_location"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="节数" prop="timeId">
         <el-input
-          v-model="queryParams.roomId"
-          placeholder="请输入辅导室编号"
+          v-model="queryParams.timeId"
+          placeholder="请输入节数"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -90,18 +108,27 @@
           v-hasPermi="['system:order:export']"
         >导出</el-button>
       </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="节数" align="center" prop="timeId" />
-      <el-table-column label="日期" align="center" prop="orderDate" />
+<!--      <el-table-column label="辅导室预约编号" align="center" prop="teacherOrderId" />-->
+      <el-table-column label="日期" align="center" prop="orderDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.orderDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="科目" align="center" prop="subjectName" />
-      <el-table-column label="账号" align="center" prop="uId" />
       <el-table-column label="课程" align="center" prop="course" />
       <el-table-column label="学生人数" align="center" prop="studentNum" />
-      <el-table-column label="辅导室编号" align="center" prop="roomId" />
+      <el-table-column label="辅导室编号" align="center" prop="roomId">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.croom_location" :value="scope.row.roomId"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="节数" align="center" prop="timeId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -118,6 +145,16 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:order:remove']"
           >删除</el-button>
+
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-add"
+            @click="handleChoose(scope.row)"
+            v-hasPermi="['system:stuorder:add']"
+          >选择</el-button>
+
+
         </template>
       </el-table-column>
     </el-table>
@@ -133,59 +170,40 @@
     <!-- 添加或修改辅导室预约信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
-        <el-form-item label="节数" prop="timeId">
-          <el-input v-model="form.timeId" placeholder="请输入节数" />
-        </el-form-item>
-
         <el-form-item label="日期" prop="orderDate">
           <el-date-picker clearable
-                          v-model="form.orderDate"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          :picker-options="pickerOptions"
-                          placeholder="请选择日期">
+            v-model="form.orderDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions"
+            placeholder="请选择日期">
           </el-date-picker>
-          <!--          <el-input v-model="form.orderDate" placeholder="请输入日期" />-->
         </el-form-item>
-
-
-
-
         <el-form-item label="科目" prop="subjectName">
           <el-input v-model="form.subjectName" placeholder="请输入科目" />
         </el-form-item>
-
-<!--        <el-form-item label="账号" prop="uId">-->
-<!--          <el-input  v-model="form.uId" placeholder="请输入账号" />-->
-<!--        </el-form-item>-->
-
+        <el-form-item label="账号" prop="uId">
+          <el-input v-model="form.uId" placeholder="请输入账号" />
+        </el-form-item>
         <el-form-item label="课程" prop="course">
           <el-input v-model="form.course" placeholder="请输入课程" />
         </el-form-item>
-
-<!--        <el-form-item label="辅导室" prop="roomId">-->
-<!--          <el-select v-model="form.roomId" style="width: 120px">-->
-<!--            <el-option-->
-<!--              v-for="item in locationOptions"-->
-<!--              :key="item.roomId"-->
-<!--              :label="item.location"-->
-<!--              :value="item.roomId">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
+<!--        <el-form-item label="学生人数" prop="studentNum">-->
+<!--          <el-input v-model="form.studentNum" placeholder="请输入学生人数" />-->
 <!--        </el-form-item>-->
-
-
-        <el-form-item label="辅导室" prop="roomId">
-          <el-select v-model="form.roomId" placeholder="请选择辅导室" filterable clearable
-                     :style="{width: '100%'}"  >
-            <el-option v-for="item in dict.type.croom_location" :key="item.value" :label="item.label"
-                       :value="item.value" ></el-option>
+        <el-form-item label="辅导室编号" prop="roomId">
+          <el-select v-model="form.roomId" placeholder="请选择辅导室编号" filterable clearable :style="{width: '100%'}" >
+            <el-option
+              v-for="dict in dict.type.croom_location"
+              :key="dict.value"
+              :label="dict.label"
+:value="parseInt(dict.value)"
+            ></el-option>
           </el-select>
         </el-form-item>
-
-
-
+        <el-form-item label="节数" prop="timeId">
+          <el-input v-model="form.timeId" placeholder="请输入节数" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -196,11 +214,12 @@
 </template>
 
 <script>
-import { listOrder, getOrder, delOrder, addOrder, updateOrder,getlocationList } from "@/api/system/order";
+import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/system/order";
+import { addStuorder, updateStuorder } from '@/api/system/stuorder'
 
 export default {
   name: "Order",
-  dicts:['croom_location'],
+  dicts: ['croom_location'],
   data() {
     return {
       // 遮罩层
@@ -225,23 +244,32 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        timeId: null,
         orderDate: null,
         subjectName: null,
         uId: null,
-        roomId: null
+        course: null,
+        studentNum: null,
+        roomId: null,
+        timeId: null
       },
       // 表单参数
       form: {},
+      chooser:{},
       // 表单校验
       rules: {
-        location: [{
-          required: true,
-          message: '请选择辅导室',
-          trigger: 'change'
-        }],
+        orderDate: [
+          { required: true, message: "日期不能为空", trigger: "blur" }
+        ],
+        uId: [
+          { required: true, message: "账号不能为空", trigger: "blur" }
+        ],
+        roomId: [
+          { required: true, message: "辅导室编号不能为空", trigger: "change" }
+        ],
+        timeId: [
+          { required: true, message: "节数不能为空", trigger: "blur" }
+        ]
       },
-      locationOptions: [],
     pickerOptions: {
       disabledDate(time) {
         const times = new Date(new Date().toLocaleDateString()).getTime() + 4 * 8.64e7 - 1
@@ -250,15 +278,20 @@ export default {
     },
     };
   },
-
   created() {
     this.getList();
-    this.getlocation();
   },
   methods: {
     /** 查询辅导室预约信息列表 */
     getList() {
       this.loading = true;
+      const myname=this.$store.state.user.name;
+      // if(this.$store.state.user.name!="admin"){
+        if(myname.length==6){//老师只能看到自己的辅导室预约信息
+        // if(this.$store.state.user.name=="123456"){
+          this.queryParams.uId=myname;
+        }
+
       listOrder(this.queryParams).then(response => {
         this.orderList = response.rows;
         this.total = response.total;
@@ -273,34 +306,17 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        timeId: null,
+        teacherOrderId: null,
         orderDate: null,
         subjectName: null,
         uId: null,
         course: null,
         studentNum: null,
-        roomId: null
+        roomId: null,
+        timeId: null
       };
       this.resetForm("form");
     },
-
-    //获得辅导室编号
-    getlocation(){
-      getlocationList().then(response => {
-        //response      form.location.
-        this.locationOptions = response.ccroom;
-      });
-    },
-//     getitem1(val){
-// //val即是传进来的id值，也即value值
-//       var obj = {};
-//       obj = this.chioce.find((item) =>{
-//         return item.id ===val;
-//       });
-//       console.log(obj.typeName)
-//       console.log("id的值为："+val)
-//     },
-
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -313,7 +329,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.timeId)
+      this.ids = selection.map(item => item.teacherOrderId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -323,12 +339,13 @@ export default {
       this.open = true;
       this.title = "添加辅导室预约信息";
       this.form.uId=this.$store.state.user.name;
+      this.form.studentNum=0;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const timeId = row.timeId || this.ids
-      getOrder(timeId).then(response => {
+      const teacherOrderId = row.teacherOrderId || this.ids
+      getOrder(teacherOrderId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改辅导室预约信息";
@@ -338,16 +355,15 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.timeId != null&& this.title == "修改辅导室预约信息") {
+          if (this.title == "修改辅导室预约信息"&&this.form.teacherOrderId != null) {
             updateOrder(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-
+            this.form.teacherOrderId=String(this.form.timeId)+String(this.form.orderDate)+this.form.uId;
             addOrder(this.form).then(response => {
-
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -358,9 +374,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const timeIds = row.timeId || this.ids;
-      this.$modal.confirm('是否确认删除辅导室预约信息编号为"' + timeIds + '"的数据项？').then(function() {
-        return delOrder(timeIds);
+      const teacherOrderIds = row.teacherOrderId || this.ids;
+      this.$modal.confirm('是否确认删除辅导室预约信息编号为"' + teacherOrderIds + '"的数据项？').then(function() {
+        return delOrder(teacherOrderIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -371,7 +387,31 @@ export default {
       this.download('system/order/export', {
         ...this.queryParams
       }, `order_${new Date().getTime()}.xlsx`)
+    },
+    handleChoose(row) {
+      // this.$modal.msgSuccess("新增成功");
+      this.chooser.timeId = row.timeId;
+      this.chooser.orderDate = row.orderDate;
+      this.chooser.subjectName = row.subjectName;
+      this.chooser.uId = row.uId;
+      this.chooser.studentId = this.$store.state.user.name;
+      this.chooser.roomId = row.roomId;
+      this.chooser.studentOrderId = String(this.chooser.timeId) + String(this.chooser.orderDate) + this.chooser.studentId;
+
+          addStuorder(this.chooser).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.getList();
+          }
+        );
+
+      // const timeId=row.timeId;
+      // const orderDate=row.orderDate;
+      // const subjectName=row.subjectName;
+      // const uId=row.uId;
+      // const studentId=this.$store.state.user.name;
     }
+    // const studentOrderId
+  //timeId  orderDate  subjectName  uId studentId  roomId
   }
 };
 </script>

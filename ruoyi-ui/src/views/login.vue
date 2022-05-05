@@ -73,7 +73,7 @@ export default {
       codeUrl: "",
       loginForm: {
         username: "admin",
-        password: "admin123",
+        password: "",
         rememberMe: false,
         code: "",
         uuid: ""
@@ -161,7 +161,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
+  background-image: url("../assets/images/l2.jpg");
   background-size: cover;
 }
 .title {

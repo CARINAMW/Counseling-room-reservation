@@ -10,9 +10,9 @@ export function listOrder(query) {
 }
 
 // 查询辅导室预约信息详细
-export function getOrder(timeId) {
+export function getOrder(teacherOrderId) {
   return request({
-    url: '/system/order/' + timeId,
+    url: '/system/order/' + teacherOrderId,
     method: 'get'
   })
 }
@@ -36,18 +36,9 @@ export function updateOrder(data) {
 }
 
 // 删除辅导室预约信息
-export function delOrder(timeId) {
+export function delOrder(teacherOrderId) {
   return request({
-    url: '/system/order/' + timeId,
+    url: '/system/order/' + teacherOrderId,
     method: 'delete'
-  })
-}
-
-
-//查找使用辅导室编号
-export function getlocationList() {
-  return request({
-    url: '/system/order/aall',
-    method: 'get'
   })
 }

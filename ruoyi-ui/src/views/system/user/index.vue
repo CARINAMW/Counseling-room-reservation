@@ -203,7 +203,7 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户账号" prop="userName">
+            <el-form-item label="用户账号" prop="userName">
               <el-input v-model="form.userName" placeholder="请输入用户账号" maxlength="30" />
             </el-form-item>
           </el-col>
