@@ -3,56 +3,61 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.TeacherOrderMapper">
-
+    
     <resultMap type="TeacherOrder" id="TeacherOrderResult">
-        <result property="timeId"    column="time_id"    />
+        <result property="teacherOrderId"    column="teacher_order_id"    />
         <result property="orderDate"    column="order_date"    />
         <result property="subjectName"    column="subject_name"    />
         <result property="uId"    column="u_id"    />
         <result property="course"    column="course"    />
         <result property="studentNum"    column="student_num"    />
         <result property="roomId"    column="room_id"    />
+        <result property="timeId"    column="time_id"    />
     </resultMap>
 
     <sql id="selectTeacherOrderVo">
-        select time_id, order_date, subject_name, u_id, course, student_num, room_id from teacher_order
+        select teacher_order_id, order_date, subject_name, u_id, course, student_num, room_id, time_id from teacher_order
     </sql>
 
     <select id="selectTeacherOrderList" parameterType="TeacherOrder" resultMap="TeacherOrderResult">
         <include refid="selectTeacherOrderVo"/>
-        <where>
-            <if test="timeId != null "> and time_id = #{timeId}</if>
+        <where>  
             <if test="orderDate != null "> and order_date = #{orderDate}</if>
             <if test="subjectName != null  and subjectName != ''"> and subject_name like concat('%', #{subjectName}, '%')</if>
             <if test="uId != null  and uId != ''"> and u_id = #{uId}</if>
+            <if test="course != null  and course != ''"> and course = #{course}</if>
+            <if test="studentNum != null "> and student_num = #{studentNum}</if>
             <if test="roomId != null "> and room_id = #{roomId}</if>
+            <if test="timeId != null "> and time_id = #{timeId}</if>
         </where>
     </select>
-
-    <select id="selectTeacherOrderByTimeId" parameterType="Long" resultMap="TeacherOrderResult">
+    
+    <select id="selectTeacherOrderByTeacherOrderId" parameterType="String" resultMap="TeacherOrderResult">
         <include refid="selectTeacherOrderVo"/>
-        where time_id = #{timeId}
+        where teacher_order_id = #{teacherOrderId}
     </select>
-
+        
     <insert id="insertTeacherOrder" parameterType="TeacherOrder">
         insert into teacher_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="timeId != null">time_id,</if>
+            <if test="teacherOrderId != null">teacher_order_id,</if>
             <if test="orderDate != null">order_date,</if>
             <if test="subjectName != null">subject_name,</if>
-            <if test="uId != null">u_id,</if>
+            <if test="uId != null and uId != ''">u_id,</if>
             <if test="course != null">course,</if>
             <if test="studentNum != null">student_num,</if>
             <if test="roomId != null">room_id,</if>
+            <if test="timeId != null">time_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="timeId != null">#{timeId},</if>
+            <if test="teacherOrderId != null">#{teacherOrderId},</if>
             <if test="orderDate != null">#{orderDate},</if>
             <if test="subjectName != null">#{subjectName},</if>
-            <if test="uId != null">#{uId},</if>
+            <if test="uId != null and uId != ''">#{uId},</if>
             <if test="course != null">#{course},</if>
             <if test="studentNum != null">#{studentNum},</if>
             <if test="roomId != null">#{roomId},</if>
+            <if test="timeId != null">#{timeId},</if>
          </trim>
     </insert>
 
@@ -61,27 +66,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderDate != null">order_date = #{orderDate},</if>
             <if test="subjectName != null">subject_name = #{subjectName},</if>
-            <if test="uId != null">u_id = #{uId},</if>
+            <if test="uId != null and uId != ''">u_id = #{uId},</if>
             <if test="course != null">course = #{course},</if>
             <if test="studentNum != null">student_num = #{studentNum},</if>
             <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="timeId != null">time_id = #{timeId},</if>
         </trim>
-        where time_id = #{timeId}
+        where teacher_order_id = #{teacherOrderId}
     </update>
 
-    <delete id="deleteTeacherOrderByTimeId" parameterType="Long">
-        delete from teacher_order where time_id = #{timeId}
+    <delete id="deleteTeacherOrderByTeacherOrderId" parameterType="String">
+        delete from teacher_order where teacher_order_id = #{teacherOrderId}
     </delete>
 
-
-    <delete id="deleteTeacherOrderByTimeIds" parameterType="String">
-        delete from teacher_order where time_id in
-        <foreach item="timeId" collection="array" open="(" separator="," close=")">
-            #{timeId}
+    <delete id="deleteTeacherOrderByTeacherOrderIds" parameterType="String">
+        delete from teacher_order where teacher_order_id in 
+        <foreach item="teacherOrderId" collection="array" open="(" separator="," close=")">
+            #{teacherOrderId}
         </foreach>
     </delete>
-
-
-
-
 </mapper>

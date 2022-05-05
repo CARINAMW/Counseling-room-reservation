@@ -7,17 +7,17 @@ import com.ruoyi.system.domain.StudentOrder;
  * 解疑辅导室预约信息Mapper接口
  * 
  * @author ruoyi
- * @date 2022-04-25
+ * @date 2022-04-27
  */
 public interface StudentOrderMapper 
 {
     /**
      * 查询解疑辅导室预约信息
      * 
-     * @param timeId 解疑辅导室预约信息主键
+     * @param studentOrderId 解疑辅导室预约信息主键
      * @return 解疑辅导室预约信息
      */
-    public StudentOrder selectStudentOrderByTimeId(Long timeId);
+    public StudentOrder selectStudentOrderByStudentOrderId(String studentOrderId);
 
     /**
      * 查询解疑辅导室预约信息列表
@@ -46,16 +46,16 @@ public interface StudentOrderMapper
     /**
      * 删除解疑辅导室预约信息
      * 
-     * @param timeId 解疑辅导室预约信息主键
+     * @param studentOrderId 解疑辅导室预约信息主键
      * @return 结果
      */
-    public int deleteStudentOrderByTimeId(Long timeId);
+    public int deleteStudentOrderByStudentOrderId(String studentOrderId);
 
     /**
      * 批量删除解疑辅导室预约信息
      * 
-     * @param timeIds 需要删除的数据主键集合
+     * @param studentOrderIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteStudentOrderByTimeIds(Long[] timeIds);
+    public int deleteStudentOrderByStudentOrderIds(String[] studentOrderIds);
 }

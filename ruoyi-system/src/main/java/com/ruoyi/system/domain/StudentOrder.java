@@ -11,15 +11,14 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 解疑辅导室预约信息对象 student_order
  * 
  * @author ruoyi
- * @date 2022-04-25
+ * @date 2022-04-27
  */
 public class StudentOrder extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 节数 */
-    @Excel(name = "节数")
-    private Long timeId;
+    /** 预约解疑辅导室编号 */
+    private String studentOrderId;
 
     /** 日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -34,20 +33,25 @@ public class StudentOrder extends BaseEntity
     private String uId;
 
     /** 学生账号 */
+    @Excel(name = "学生账号")
     private String studentId;
 
     /** 辅导室编号 */
     @Excel(name = "辅导室编号")
     private Long roomId;
 
-    public void setTimeId(Long timeId) 
+    /** 节数 */
+    @Excel(name = "节数")
+    private Long timeId;
+
+    public void setStudentOrderId(String studentOrderId) 
     {
-        this.timeId = timeId;
+        this.studentOrderId = studentOrderId;
     }
 
-    public Long getTimeId() 
+    public String getStudentOrderId() 
     {
-        return timeId;
+        return studentOrderId;
     }
     public void setOrderDate(Date orderDate) 
     {
@@ -94,16 +98,26 @@ public class StudentOrder extends BaseEntity
     {
         return roomId;
     }
+    public void setTimeId(Long timeId) 
+    {
+        this.timeId = timeId;
+    }
+
+    public Long getTimeId() 
+    {
+        return timeId;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("timeId", getTimeId())
+            .append("studentOrderId", getStudentOrderId())
             .append("orderDate", getOrderDate())
             .append("subjectName", getSubjectName())
             .append("uId", getuId())
             .append("studentId", getStudentId())
             .append("roomId", getRoomId())
+            .append("timeId", getTimeId())
             .toString();
     }
 }

@@ -28,6 +28,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where room_id = #{roomId}
     </select>
 
+
+<!--    insertcroom-->
+    <insert id="insertcroom" parameterType="CRoom">
+        insert into c_room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomId != null">room_id,</if>
+            <if test="introduction != null">introduction,</if>
+            <if test="location != null and location != ''">location,</if>
+            <if test="userNum != null">user_num,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomId != null">#{roomId},</if>
+            <if test="introduction != null">#{introduction},</if>
+            <if test="location != null and location != ''">#{location},</if>
+            <if test="userNum != null">#{userNum},</if>
+        </trim>
+    </insert>
+
     <insert id="insertCRoom" parameterType="CRoom">
         insert into c_room
         <trim prefix="(" suffix=")" suffixOverrides=",">

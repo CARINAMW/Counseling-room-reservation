@@ -35,6 +35,8 @@ public interface CRoomMapper
      */
     public int insertCRoom(CRoom cRoom);
 
+//    public int insertcroom(CRoom cRoom);
+
     /**
      * 修改辅导室
      *

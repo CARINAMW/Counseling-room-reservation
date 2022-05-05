@@ -11,7 +11,7 @@ import com.ruoyi.system.service.IStudentOrderService;
  * 解疑辅导室预约信息Service业务层处理
  * 
  * @author ruoyi
- * @date 2022-04-25
+ * @date 2022-04-27
  */
 @Service
 public class StudentOrderServiceImpl implements IStudentOrderService 
@@ -22,13 +22,13 @@ public class StudentOrderServiceImpl implements IStudentOrderService
     /**
      * 查询解疑辅导室预约信息
      * 
-     * @param timeId 解疑辅导室预约信息主键
+     * @param studentOrderId 解疑辅导室预约信息主键
      * @return 解疑辅导室预约信息
      */
     @Override
-    public StudentOrder selectStudentOrderByTimeId(Long timeId)
+    public StudentOrder selectStudentOrderByStudentOrderId(String studentOrderId)
     {
-        return studentOrderMapper.selectStudentOrderByTimeId(timeId);
+        return studentOrderMapper.selectStudentOrderByStudentOrderId(studentOrderId);
     }
 
     /**
@@ -70,24 +70,24 @@ public class StudentOrderServiceImpl implements IStudentOrderService
     /**
      * 批量删除解疑辅导室预约信息
      * 
-     * @param timeIds 需要删除的解疑辅导室预约信息主键
+     * @param studentOrderIds 需要删除的解疑辅导室预约信息主键
      * @return 结果
      */
     @Override
-    public int deleteStudentOrderByTimeIds(Long[] timeIds)
+    public int deleteStudentOrderByStudentOrderIds(String[] studentOrderIds)
     {
-        return studentOrderMapper.deleteStudentOrderByTimeIds(timeIds);
+        return studentOrderMapper.deleteStudentOrderByStudentOrderIds(studentOrderIds);
     }
 
     /**
      * 删除解疑辅导室预约信息信息
      * 
-     * @param timeId 解疑辅导室预约信息主键
+     * @param studentOrderId 解疑辅导室预约信息主键
      * @return 结果
      */
     @Override
-    public int deleteStudentOrderByTimeId(Long timeId)
+    public int deleteStudentOrderByStudentOrderId(String studentOrderId)
     {
-        return studentOrderMapper.deleteStudentOrderByTimeId(timeId);
+        return studentOrderMapper.deleteStudentOrderByStudentOrderId(studentOrderId);
     }
 }

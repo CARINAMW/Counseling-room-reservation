@@ -55,6 +55,11 @@ public class CRoomServiceImpl implements ICRoomService
         return cRoomMapper.insertCRoom(cRoom);
     }
 
+//    public static int insertcroom(CRoom cRoom)
+//    {
+//        return cRoomMapper.insertcroom(cRoom);
+//    }
+
     /**
      * 修改辅导室
      *
@@ -86,7 +91,7 @@ public class CRoomServiceImpl implements ICRoomService
      * @return 结果
      */
     @Override
-    public int deleteCRoomByRoomId(Long roomId)
+    public  int deleteCRoomByRoomId(Long roomId)
     {
         return cRoomMapper.deleteCRoomByRoomId(roomId);
     }
