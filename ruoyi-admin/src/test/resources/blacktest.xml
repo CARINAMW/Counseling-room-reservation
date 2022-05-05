@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cases>
+    <case>
+        <RoomId>201</RoomId>
+        <Introduction>位于图书馆二楼</Introduction>
+        <Location>201</Location>
+        <UserNum>20</UserNum>
+    </case>
+    <case>
+        <RoomId>202</RoomId>
+        <Introduction>位于图书馆二楼</Introduction>
+        <Location>202</Location>
+        <UserNum>20</UserNum>
+    </case>
+
+
+</cases>

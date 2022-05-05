@@ -2,12 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.system.domain.CRoom;
-import com.ruoyi.system.service.ICRoomService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,13 +21,11 @@ import com.ruoyi.system.service.ITeacherOrderService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
-import static org.apache.naming.SelectorContext.prefix;
-
 /**
  * 辅导室预约信息Controller
  *
  * @author ruoyi
- * @date 2022-04-22
+ * @date 2022-04-27
  */
 @RestController
 @RequestMapping("/system/order")
@@ -39,8 +33,6 @@ public class TeacherOrderController extends BaseController
 {
     @Autowired
     private ITeacherOrderService teacherOrderService;
-    private ICRoomService cRoomService;
-
 
     /**
      * 查询辅导室预约信息列表
@@ -71,10 +63,10 @@ public class TeacherOrderController extends BaseController
      * 获取辅导室预约信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:order:query')")
-    @GetMapping(value = "/{timeId}")
-    public AjaxResult getInfo(@PathVariable("timeId") Long timeId)
+    @GetMapping(value = "/{teacherOrderId}")
+    public AjaxResult getInfo(@PathVariable("teacherOrderId") String teacherOrderId)
     {
-        return AjaxResult.success(teacherOrderService.selectTeacherOrderByTimeId(timeId));
+        return AjaxResult.success(teacherOrderService.selectTeacherOrderByTeacherOrderId(teacherOrderId));
     }
 
     /**
@@ -85,7 +77,6 @@ public class TeacherOrderController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TeacherOrder teacherOrder)
     {
-
         return toAjax(teacherOrderService.insertTeacherOrder(teacherOrder));
     }
 
@@ -105,40 +96,11 @@ public class TeacherOrderController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:order:remove')")
     @Log(title = "辅导室预约信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{timeIds}")
-    public AjaxResult remove(@PathVariable Long[] timeIds)
+	@DeleteMapping("/{teacherOrderIds}")
+    public AjaxResult remove(@PathVariable String[] teacherOrderIds)
     {
-        return toAjax(teacherOrderService.deleteTeacherOrderByTimeIds(timeIds));
+        return toAjax(teacherOrderService.deleteTeacherOrderByTeacherOrderIds(teacherOrderIds));
     }
-
-    /**
-     *获取所有辅导室编号
-     */
-//    @PreAuthorize("@ss.hasPermi('system:order:all')")
-//    @GetMapping("/list")
-//    public AjaxResult all(CRoom cRoom)
-//    {
-//        List<CRoom> list = cRoomService.selectTlocationList(cRoom);
-//        if(list!=null){
-//            return AjaxResult.success(list);
-//        }
-//        else
-//        return AjaxResult.error();
-//
-//    }
-    @GetMapping("/aall")
-    public AjaxResult aall(CRoom crooml){
-        AjaxResult ajax = AjaxResult.success();
-        ajax.put("ccroom",cRoomService.selectTlocationList());
-        return ajax;
-//               return AjaxResult.success(cRoomService.selectTlocationList());
-    }
-//    @GetMapping("/add")
-//    public String add(ModelMap mmap){
-//        mmap.put("ccroom",cRoomService.selectTlocationList());
-//        return "/system/order/add";
-//    }
-
 
 
 

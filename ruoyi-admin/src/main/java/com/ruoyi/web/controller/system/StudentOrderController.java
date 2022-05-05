@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 解疑辅导室预约信息Controller
  *
  * @author ruoyi
- * @date 2022-04-25
+ * @date 2022-04-27
  */
 @RestController
 @RequestMapping("/system/stuorder")
@@ -63,10 +63,10 @@ public class StudentOrderController extends BaseController
      * 获取解疑辅导室预约信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:stuorder:query')")
-    @GetMapping(value = "/{timeId}")
-    public AjaxResult getInfo(@PathVariable("timeId") Long timeId)
+    @GetMapping(value = "/{studentOrderId}")
+    public AjaxResult getInfo(@PathVariable("studentOrderId") String studentOrderId)
     {
-        return AjaxResult.success(studentOrderService.selectStudentOrderByTimeId(timeId));
+        return AjaxResult.success(studentOrderService.selectStudentOrderByStudentOrderId(studentOrderId));
     }
 
     /**
@@ -96,10 +96,10 @@ public class StudentOrderController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:stuorder:remove')")
     @Log(title = "解疑辅导室预约信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{timeIds}")
-    public AjaxResult remove(@PathVariable Long[] timeIds)
+	@DeleteMapping("/{studentOrderIds}")
+    public AjaxResult remove(@PathVariable String[] studentOrderIds)
     {
-        return toAjax(studentOrderService.deleteStudentOrderByTimeIds(timeIds));
+        return toAjax(studentOrderService.deleteStudentOrderByStudentOrderIds(studentOrderIds));
     }
 
 
